@@ -5,15 +5,30 @@ class Tag(models.Model):
 	name=models.CharField(max_length=31, unique=True)
 	slug=models.SlugField(max_length=31,unique=True,help_text='A label for URL config')
 
+	def __str__(self):
+		return serlf.name
+
+
+	class Meta:
+		ordering=['name']
+
 
 class Startup(models.Model):
 	name=models.CharField(max_length=31,db_index=True)
-	slug=max_length.SlugField(max_length=31,unique=True,help_text='A label for URL config.')
+	slug=models.SlugField(max_length=31,unique=True,help_text='A label for URL config.')
 	description=models.TextField()
 	founded_date=models.DateField('date founded')
 	contact=models.EmailField()
 	website=models.URLField(max_length=255)
-	tags=models.ManyTOManyField(Tag)
+	tags=models.ManyToManyField(Tag)
+
+
+	def __str__(self):
+		return self.name
+
+	class Meta:
+		ordering=['name']
+		get_latest_by='founded_date'
 
 
 class Newslink(models.Model):
@@ -21,6 +36,18 @@ class Newslink(models.Model):
 	pub_date=models.DateField('date published')
 	link=models.URLField(max_length=255)
 	Startup=models.ForeignKey(Startup)
+
+
+	def __self__(self):
+		return "{}:{}".format(
+			self.Startup,self.title)
+
+
+	class Meta:
+		verbose_name='news article'
+		ordering=['-pub_date']
+		get_latest_by='pub_date'
+
 
 
 
